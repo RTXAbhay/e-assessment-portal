@@ -3,9 +3,14 @@ import express from "express";
 import { CohereClient } from "cohere-ai";
 import { requireAuth } from "../middleware/auth.js";
 import Chat from "../models/Chat.js";
+import dotenv from "dotenv";
+
+dotenv.config(); // Ensure env variables are loaded
 
 const router = express.Router();
-const cohere = new CohereClient({ apiKey: process.env.COHERE_API_KEY });
+
+// ✅ Fix: Match the correct .env variable name
+const cohere = new CohereClient({ apiKey: process.env.CO_API_KEY });
 
 // GET saved chat history
 router.get("/", requireAuth, async (req, res) => {
