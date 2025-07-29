@@ -1,22 +1,30 @@
+// server.js
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 
-import authRoutes   from "./routes/auth.js";
-import userRoutes   from "./routes/users.js";
-import examRoutes   from "./routes/exams.js";
+import authRoutes from "./routes/auth.js";
+import userRoutes from "./routes/users.js";
+import examRoutes from "./routes/exams.js";
 import resultRoutes from "./routes/results.js";
-import adminRoutes  from "./routes/admin.js";
-import { requireAuth } from "./middleware/auth.js";
+import adminRoutes from "./routes/admin.js";
 import chatRoutes from "./routes/chat.js";
+import { requireAuth } from "./middleware/auth.js";
 
 dotenv.config();
 
 const app = express();
 
 // ── Middleware ────────────────────────────────────────────────────────────────
-app.use(cors());
+app.use(
+  cors({
+    origin: "*", // Allow requests from any origin (for production, use your frontend URL)
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
 app.use(express.json());
 
 // ── Connect to MongoDB ────────────────────────────────────────────────────────
@@ -28,6 +36,11 @@ mongoose
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
+// ── Test Route (Optional) ─────────────────────────────────────────────────────
+app.get("/api/test", (req, res) => {
+  res.json({ success: true, message: "Backend is working 🚀" });
+});
+
 // ── Public Auth endpoints ─────────────────────────────────────────────────────
 app.use("/api/auth", authRoutes);
 
@@ -35,10 +48,10 @@ app.use("/api/auth", authRoutes);
 app.use(requireAuth);
 
 // ── Protected routes ──────────────────────────────────────────────────────────
-app.use("/api/users",   userRoutes);
-app.use("/api/exams",   examRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/exams", examRoutes);
 app.use("/api/results", resultRoutes);
-app.use("/api/admin",   adminRoutes);
+app.use("/api/admin", adminRoutes);
 app.use("/api/chat", chatRoutes);
 
 // ── Start server ──────────────────────────────────────────────────────────────
