@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:5000/api",  // all calls to /exams, /results, etc. → http://localhost:5000/api/exams, etc.
+  baseURL: "https://e-assessment-portal.onrender.com/api",  // all calls to /exams, /results, etc. → http://localhost:5000/api/exams, etc.
 });
 
 // Automatically attach JWT if present
