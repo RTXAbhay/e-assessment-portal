@@ -21,12 +21,18 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  const login = async ({ email, password }) => {
+ const login = async ({ email, password }) => {
+  try {
     const { data } = await api.post("/auth/login", { email, password });
     localStorage.setItem("token", data.token);
     const profile = await api.get("/users/me");
     setUser(profile.data);
-  };
+  } catch (err) {
+    console.error("Login error:", err.response?.data || err.message);
+    throw err;
+  }
+};
+
 
   const register = async (form) => {
     const { data } = await api.post("/auth/register", form);
