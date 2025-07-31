@@ -1,26 +1,28 @@
-// models/Feedback.js
-import mongoose from "mongoose";
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!comment.trim() || rating < 1) {
+    setError("Please enter your feedback and select at least one star.");
+    return;
+  }
 
-const feedbackSchema = new mongoose.Schema({
-  student: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  comment: {
-    type: String,
-    required: true,
-  },
-  rating: {
-    type: Number,
-    required: true,
-    min: 1,
-    max: 5,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  console.log("Submitting feedback:", {
+    student: user?._id,
+    comment,
+    rating,
+  });
 
-export default mongoose.model("Feedback", feedbackSchema);
+  setError("");
+  try {
+    await api.post("/feedback", {
+      student: user?._id,
+      comment,
+      rating,
+    });
+    setSuccess(true);
+    setComment("");
+    setRating(0);
+  } catch (err) {
+    console.error("Feedback error:", err.response || err.message);
+    setError(err.response?.data?.error || "Submission failed");
+  }
+};
