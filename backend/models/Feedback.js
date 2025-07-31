@@ -1,4 +1,4 @@
-// backend/models/Feedback.js
+// models/Feedback.js
 import mongoose from "mongoose";
 
 const feedbackSchema = new mongoose.Schema({
@@ -9,15 +9,18 @@ const feedbackSchema = new mongoose.Schema({
   },
   comment: {
     type: String,
-    trim: true,
     required: true,
   },
   rating: {
     type: Number,
+    required: true,
     min: 1,
     max: 5,
-    required: true,
   },
-}, { timestamps: true });
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
 export default mongoose.model("Feedback", feedbackSchema);

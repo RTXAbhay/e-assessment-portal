@@ -11,6 +11,7 @@ import resultRoutes from "./routes/results.js";
 import adminRoutes from "./routes/admin.js";
 import chatRoutes from "./routes/chat.js";
 import { requireAuth } from "./middleware/auth.js";
+import feedbackRoutes from "./routes/feedback.js";
 
 dotenv.config();
 
@@ -53,6 +54,8 @@ app.use("/api/exams", examRoutes);
 app.use("/api/results", resultRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/chat", chatRoutes);
+app.use(requireAuth); // keep this before feedback
+app.use("/api/feedback", feedbackRoutes); // <-- Add this!
 
 // ── Start server ──────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
